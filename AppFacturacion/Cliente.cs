@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using MySql.Data.MySqlClient;
 namespace AppFacturacion
 {
     public class Cliente
@@ -17,6 +12,38 @@ namespace AppFacturacion
         public string nombreCompleto()
         {
             return nombre + " " + apellidoPaterno + " " + apellidoMaterno;
+        }
+
+
+        public void Guardar()
+        {
+            var con = ConexionDb.ObtenerConexion();
+            string sql = "";
+            if (this.id > 0)
+            {
+                //Consulta de manipulacion de datos para un UPDATE
+                sql = "update cliente set nombre=@nombre,apellido_paterno=@apellido_paterno,apellido_materno=@apellido_materno,rfc=@rfc where id=@id";
+            }
+            else
+            {
+                //Consulta de manipulacion de datos para un INSERT
+                sql = "insert into cliente (rfc,nombre,apellido_paterno,apellido_materno) values(@rfc,@nombre,@apellido_paterno,@apellido_materno)";
+            }
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, con))
+
+            {
+                cmd.Parameters.AddWithValue("@rfc", this.rfc);
+                cmd.Parameters.AddWithValue("@nombre", this.nombre);
+                cmd.Parameters.AddWithValue("@apellido_paterno", this.apellidoPaterno);
+                cmd.Parameters.AddWithValue("@apellido_materno", this.apellidoMaterno);
+                if (this.idd > 0)
+                {
+                    cmd.Parameters.AddWithValue("@id", this.id);
+                }
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
