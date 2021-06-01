@@ -37,7 +37,7 @@ namespace AppFacturacion
                 cmd.Parameters.AddWithValue("@nombre", this.nombre);
                 cmd.Parameters.AddWithValue("@apellido_paterno", this.apellidoPaterno);
                 cmd.Parameters.AddWithValue("@apellido_materno", this.apellidoMaterno);
-                if (this.idd > 0)
+                if (this.id > 0)
                 {
                     cmd.Parameters.AddWithValue("@id", this.id);
                 }
