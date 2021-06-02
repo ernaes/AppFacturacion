@@ -45,5 +45,46 @@ namespace AppFacturacion
                 cmd.ExecuteNonQuery();
             }
         }
+
+        //READ
+        public static Cliente Obtener(int clienteId)
+        {
+            Cliente r = null;
+            var con = ConexionDb.ObtenerConexion();
+            string sql = "select id,rfc,nombre,apellido_paterno,apellido_materno from cliente where id=@id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, con))
+            {
+
+                cmd.Parameters.AddWithValue("@id",clienteId);
+                cmd.Prepare();
+                using (MySqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        r = new Cliente();
+                        r.id = clienteId;
+                        r.rfc = dr.GetString("rfc");
+                        r.nombre = dr.GetString("nombre");
+                        r.apellidoPaterno = dr.GetString("apellido_paterno");
+                        r.apellidoMaterno = dr.GetString("apellido_materno");
+                    }
+                }
+            }
+            return r;
+        }
+
+        public static void Eliminar(int clienteId)
+        {
+            var con = ConexionDb.ObtenerConexion();
+            string sql = "delete from cliente where id=@id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, con))
+            {
+
+                cmd.Parameters.AddWithValue("@id", clienteId);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }
